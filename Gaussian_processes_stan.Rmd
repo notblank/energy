@@ -1,0 +1,243 @@
+---
+title: "gaussian processes"
+author: "FZ"
+date: "3/18/2021"
+output: rmarkdown::github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Libraries
+
+```{r}
+library(tidyverse)
+library(rstan)
+library(rstanarm)
+library(bayesplot)
+```
+
+## GP over 5 points:
+
+```{stan, output.var="gp1"}
+
+data {
+  int<lower=1> N;
+  real x[N];
+}
+
+transformed data {
+  matrix[N, N] K;
+  vector[N] mu = rep_vector(0, N);
+  for (i in 1:(N - 1)) {
+    K[i, i] = 1 + 0.1;
+    for (j in (i + 1):N) {
+      K[i, j] = exp(-0.5 * square(x[i] - x[j]));
+      K[j, i] = K[i, j];
+    }
+  }
+  K[N, N] = 1 + 0.1;
+}
+parameters {
+  vector[N] y;
+}
+model {
+  y ~ multi_normal(mu, K);
+}
+  
+```
+
+
+## Fitting the model:
+
+
+```{r}
+
+gp_data <- list(N = 10, x = seq(1, 10))
+gp_data
+
+fit = sampling(object = gp1, data = gp_data)
+
+```
+
+### Posterior Samples from a GP:
+
+```{r}
+
+posterior <- extract(fit, inc_warmup = FALSE)
+
+n_samples <- dim(posterior$y)[1]
+
+as.tibble(posterior$y) %>%
+  mutate(sample_n = 1:n_samples) %>%
+  pivot_longer(cols = -sample_n, names_to = "vars", values_to = "mcmc_samples") %>%
+  filter(sample_n <= 10) %>%
+  mutate(x = rep(1:10, 10), sample_n = factor(sample_n)) %>%
+  ggplot(aes(x, mcmc_samples, color = sample_n)) +
+  geom_line() +
+  labs(title = "10 samples from a GP") +
+  theme(legend.position = "none")
+
+
+```
+
+## Fitting a GP:
+
+1- Estimate the params | data.
+2- Plug-in the params and predict.
+
+```{stan, output.var="gp_params"}
+
+data {
+  int<lower=1> N;
+  real x[N];
+  vector[N] y;
+}
+
+transformed data {
+  vector[N] mu = rep_vector(0, N);
+}
+
+parameters {
+  real<lower=0> rho;
+  real<lower=0> alpha;
+  real<lower=0> sigma;
+}
+
+model {
+  matrix[N, N] L_K;
+  matrix[N, N] K = cov_exp_quad(x, alpha, rho);
+  real sq_sigma = square(sigma);
+
+  // diagonal elements
+  for (n in 1:N)
+    K[n, n] = K[n, n] + sq_sigma;
+
+  L_K = cholesky_decompose(K);
+
+  rho ~ inv_gamma(5, 5);
+  alpha ~ std_normal();
+  sigma ~ std_normal();
+
+  y ~ multi_normal_cholesky(mu, L_K);
+}
+
+```
+
+
+## Estimating the parameters:
+
+
+```{r}
+
+N <- 30
+x <- seq(0, 2, length.out = N)
+y <- sin(x) + rnorm(N, 0, 1)
+
+gp_params_data <- list(N = N, x = x, y = y)
+gp_params_data
+
+fit_params = sampling(object = gp_params, data = gp_params_data)
+
+```
+
+```{r}
+
+fit_params
+
+```
+
+```{r}
+
+param_posteriors <- extract(fit_params, inc_warmup = TRUE, permuted = FALSE)
+
+color_scheme_set("mix-blue-pink")
+p <- mcmc_trace(param_posteriors,  pars = c("rho", "alpha", "sigma"), n_warmup = 300,
+                facet_args = list(nrow = 2, labeller = label_parsed))
+p + facet_text(size = 15)
+```
+
+```{r}
+
+mcmc_areas(fit_params, regex_pars = c("rho", "alpha", "sigma"),  prob = 0.8) +
+ labs(
+   title = "Posterior distributions",
+   subtitle = "with medians and 80% intervals"
+ )
+
+```
+
+#### Posterior distribution:
+
+
+```{r}
+
+posterior_summary <-
+  as.tibble(extract(fit_params)) %>%
+  select(-lp__) %>%
+  pivot_longer(cols = c("rho", "alpha", "sigma"), 
+               names_to = "param", values_to = "mcmc_estimate") %>%
+  group_by(param) %>%
+  summarise(mean_p = mean(mcmc_estimate), sd_p = sd(mcmc_estimate))
+
+fit_params
+
+```
+
+## Predictive model:
+
+```{r, output.var = rho_m}
+
+rho_m <- summary(fit_params)$summary[1,1]
+alpha_m <- summary(fit_params)$summary[2,1]
+sigma_m <- summary(fit_params)$summary[3,1]
+
+sigma_m
+
+```
+
+```{stan, output.var="gp_pred"}
+
+data {
+  int<lower=1> N;
+  real x[N];
+}
+
+transformed data {
+  vector[N] mu = rep_vector(0, N);
+}
+
+parameters {
+  vector[N] y;
+}
+
+model {
+  matrix[N, N] L_K;
+  matrix[N, N] K = cov_exp_quad(x, 0.82, 1.36);
+  real sq_sigma = square(0.86);
+
+  // diagonal elements
+  for (n in 1:N)
+    K[n, n] = K[n, n] + sq_sigma;
+
+  L_K = cholesky_decompose(K);
+
+  y ~ multi_normal_cholesky(mu, L_K);
+}
+
+```
+
+```{r}
+
+N <- 100
+x <- seq(0, 2, length.out = N)
+
+gp_pred_data <- list(N = N, x = x)
+gp_pred_data
+
+fit_pred <- sampling(gp_pred, data = gp_pred_data)
+
+```
+
+
