@@ -144,15 +144,15 @@ fit = sampling(object = gp1, data = gp_data)
     ## Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
     ## Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
     ## Chain 1: 
-    ## Chain 1:  Elapsed Time: 0.048473 seconds (Warm-up)
-    ## Chain 1:                0.048868 seconds (Sampling)
-    ## Chain 1:                0.097341 seconds (Total)
+    ## Chain 1:  Elapsed Time: 0.04972 seconds (Warm-up)
+    ## Chain 1:                0.049804 seconds (Sampling)
+    ## Chain 1:                0.099524 seconds (Total)
     ## Chain 1: 
     ## 
     ## SAMPLING FOR MODEL '2b5d01b12e63cfef128b895396667d8f' NOW (CHAIN 2).
     ## Chain 2: 
-    ## Chain 2: Gradient evaluation took 9e-06 seconds
-    ## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.09 seconds.
+    ## Chain 2: Gradient evaluation took 1.5e-05 seconds
+    ## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.15 seconds.
     ## Chain 2: Adjust your expectations accordingly!
     ## Chain 2: 
     ## Chain 2: 
@@ -169,15 +169,15 @@ fit = sampling(object = gp1, data = gp_data)
     ## Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
     ## Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
     ## Chain 2: 
-    ## Chain 2:  Elapsed Time: 0.05008 seconds (Warm-up)
-    ## Chain 2:                0.051835 seconds (Sampling)
-    ## Chain 2:                0.101915 seconds (Total)
+    ## Chain 2:  Elapsed Time: 0.050276 seconds (Warm-up)
+    ## Chain 2:                0.051212 seconds (Sampling)
+    ## Chain 2:                0.101488 seconds (Total)
     ## Chain 2: 
     ## 
     ## SAMPLING FOR MODEL '2b5d01b12e63cfef128b895396667d8f' NOW (CHAIN 3).
     ## Chain 3: 
-    ## Chain 3: Gradient evaluation took 9e-06 seconds
-    ## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.09 seconds.
+    ## Chain 3: Gradient evaluation took 1.3e-05 seconds
+    ## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.13 seconds.
     ## Chain 3: Adjust your expectations accordingly!
     ## Chain 3: 
     ## Chain 3: 
@@ -194,15 +194,15 @@ fit = sampling(object = gp1, data = gp_data)
     ## Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
     ## Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
     ## Chain 3: 
-    ## Chain 3:  Elapsed Time: 0.04923 seconds (Warm-up)
-    ## Chain 3:                0.051857 seconds (Sampling)
-    ## Chain 3:                0.101087 seconds (Total)
+    ## Chain 3:  Elapsed Time: 0.049493 seconds (Warm-up)
+    ## Chain 3:                0.050183 seconds (Sampling)
+    ## Chain 3:                0.099676 seconds (Total)
     ## Chain 3: 
     ## 
     ## SAMPLING FOR MODEL '2b5d01b12e63cfef128b895396667d8f' NOW (CHAIN 4).
     ## Chain 4: 
-    ## Chain 4: Gradient evaluation took 9e-06 seconds
-    ## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.09 seconds.
+    ## Chain 4: Gradient evaluation took 8e-06 seconds
+    ## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
     ## Chain 4: Adjust your expectations accordingly!
     ## Chain 4: 
     ## Chain 4: 
@@ -219,9 +219,9 @@ fit = sampling(object = gp1, data = gp_data)
     ## Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
     ## Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
     ## Chain 4: 
-    ## Chain 4:  Elapsed Time: 0.050536 seconds (Warm-up)
-    ## Chain 4:                0.050853 seconds (Sampling)
-    ## Chain 4:                0.101389 seconds (Total)
+    ## Chain 4:  Elapsed Time: 0.050761 seconds (Warm-up)
+    ## Chain 4:                0.047908 seconds (Sampling)
+    ## Chain 4:                0.098669 seconds (Total)
     ## Chain 4:
 
 ### Posterior Samples from a GP:
@@ -313,11 +313,11 @@ gp_params_data
     ## [25] 1.65517241 1.72413793 1.79310345 1.86206897 1.93103448 2.00000000
     ## 
     ## $y
-    ##  [1] -1.4952526  0.1170724 -1.7482671  0.3285903  0.2616188  1.9291147
-    ##  [7]  1.2911629  1.1335893  0.4763955  1.7236884  1.9168440  0.5568567
-    ## [13] -0.3337995  0.6189349 -0.5119549  1.5346077  2.4562981  0.8661007
-    ## [19]  1.6642649  1.0093433  1.0298097 -1.2582765  0.9858046  0.4880863
-    ## [25]  0.5152350  1.0387495  0.3388913  0.4580377 -0.4838150 -1.3741807
+    ##  [1] -0.62960246  1.42480531 -0.61869883 -0.85005068  0.70121757 -1.64422230
+    ##  [7]  2.38135651  1.76040492  1.09861064  0.20879557  0.19619398  1.03379337
+    ## [13]  2.82390649 -0.33651775  0.99540250  2.60052987  0.95151655  1.84665794
+    ## [19]  1.36224128 -0.16794461  1.61216066 -0.13212803 -0.25596182  1.41193794
+    ## [25]  1.49274884  0.04233193  1.20839641  1.58861549  1.90757818  1.60855179
 
 ``` r
 fit_params = sampling(object = gp_params, data = gp_params_data)
@@ -326,8 +326,8 @@ fit_params = sampling(object = gp_params, data = gp_params_data)
     ## 
     ## SAMPLING FOR MODEL '8ca67fd9ca46924c00e121924f3206a1' NOW (CHAIN 1).
     ## Chain 1: 
-    ## Chain 1: Gradient evaluation took 8.6e-05 seconds
-    ## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.86 seconds.
+    ## Chain 1: Gradient evaluation took 7.8e-05 seconds
+    ## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.78 seconds.
     ## Chain 1: Adjust your expectations accordingly!
     ## Chain 1: 
     ## Chain 1: 
@@ -344,15 +344,15 @@ fit_params = sampling(object = gp_params, data = gp_params_data)
     ## Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
     ## Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
     ## Chain 1: 
-    ## Chain 1:  Elapsed Time: 0.337969 seconds (Warm-up)
-    ## Chain 1:                0.318819 seconds (Sampling)
-    ## Chain 1:                0.656788 seconds (Total)
+    ## Chain 1:  Elapsed Time: 0.31568 seconds (Warm-up)
+    ## Chain 1:                0.320315 seconds (Sampling)
+    ## Chain 1:                0.635995 seconds (Total)
     ## Chain 1: 
     ## 
     ## SAMPLING FOR MODEL '8ca67fd9ca46924c00e121924f3206a1' NOW (CHAIN 2).
     ## Chain 2: 
-    ## Chain 2: Gradient evaluation took 6.2e-05 seconds
-    ## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.62 seconds.
+    ## Chain 2: Gradient evaluation took 6.3e-05 seconds
+    ## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.63 seconds.
     ## Chain 2: Adjust your expectations accordingly!
     ## Chain 2: 
     ## Chain 2: 
@@ -369,15 +369,15 @@ fit_params = sampling(object = gp_params, data = gp_params_data)
     ## Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
     ## Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
     ## Chain 2: 
-    ## Chain 2:  Elapsed Time: 0.349505 seconds (Warm-up)
-    ## Chain 2:                0.340749 seconds (Sampling)
-    ## Chain 2:                0.690254 seconds (Total)
+    ## Chain 2:  Elapsed Time: 0.31373 seconds (Warm-up)
+    ## Chain 2:                0.323612 seconds (Sampling)
+    ## Chain 2:                0.637342 seconds (Total)
     ## Chain 2: 
     ## 
     ## SAMPLING FOR MODEL '8ca67fd9ca46924c00e121924f3206a1' NOW (CHAIN 3).
     ## Chain 3: 
-    ## Chain 3: Gradient evaluation took 6.2e-05 seconds
-    ## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.62 seconds.
+    ## Chain 3: Gradient evaluation took 6.3e-05 seconds
+    ## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.63 seconds.
     ## Chain 3: Adjust your expectations accordingly!
     ## Chain 3: 
     ## Chain 3: 
@@ -394,9 +394,9 @@ fit_params = sampling(object = gp_params, data = gp_params_data)
     ## Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
     ## Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
     ## Chain 3: 
-    ## Chain 3:  Elapsed Time: 0.345961 seconds (Warm-up)
-    ## Chain 3:                0.345461 seconds (Sampling)
-    ## Chain 3:                0.691422 seconds (Total)
+    ## Chain 3:  Elapsed Time: 0.329287 seconds (Warm-up)
+    ## Chain 3:                0.307341 seconds (Sampling)
+    ## Chain 3:                0.636628 seconds (Total)
     ## Chain 3: 
     ## 
     ## SAMPLING FOR MODEL '8ca67fd9ca46924c00e121924f3206a1' NOW (CHAIN 4).
@@ -419,87 +419,29 @@ fit_params = sampling(object = gp_params, data = gp_params_data)
     ## Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
     ## Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
     ## Chain 4: 
-    ## Chain 4:  Elapsed Time: 0.350375 seconds (Warm-up)
-    ## Chain 4:                0.337449 seconds (Sampling)
-    ## Chain 4:                0.687824 seconds (Total)
+    ## Chain 4:  Elapsed Time: 0.317973 seconds (Warm-up)
+    ## Chain 4:                0.298392 seconds (Sampling)
+    ## Chain 4:                0.616365 seconds (Total)
     ## Chain 4:
 
 ``` r
-summary(fit_params)
+fit_params
 ```
 
-    ## $summary
-    ##              mean     se_mean        sd        2.5%         25%         50%
-    ## rho     1.0001753 0.011493040 0.5214375   0.4445055   0.6920749   0.8896029
-    ## alpha   0.8827262 0.008919242 0.4748146   0.1897320   0.5313382   0.8107849
-    ## sigma   0.9997257 0.002831947 0.1427241   0.7526481   0.8997650   0.9841967
-    ## lp__  -24.1496146 0.035863050 1.3672905 -27.6826649 -24.7419170 -23.8283218
-    ##              75%      97.5%    n_eff     Rhat
-    ## rho     1.138131   2.299744 2058.423 1.000459
-    ## alpha   1.150874   1.980028 2833.950 1.002766
-    ## sigma   1.086717   1.316336 2539.944 1.002461
-    ## lp__  -23.139045 -22.591252 1453.541 1.002254
+    ## Inference for Stan model: 8ca67fd9ca46924c00e121924f3206a1.
+    ## 4 chains, each with iter=2000; warmup=1000; thin=1; 
+    ## post-warmup draws per chain=1000, total post-warmup draws=4000.
     ## 
-    ## $c_summary
-    ## , , chains = chain:1
+    ##         mean se_mean   sd   2.5%    25%    50%    75%  97.5% n_eff Rhat
+    ## rho     1.35    0.02 0.71   0.56   0.90   1.17   1.57   3.18  1923    1
+    ## alpha   0.93    0.01 0.42   0.34   0.62   0.85   1.17   1.97  3885    1
+    ## sigma   1.09    0.00 0.15   0.85   0.98   1.07   1.18   1.43  2613    1
+    ## lp__  -26.46    0.03 1.23 -29.63 -26.99 -26.12 -25.58 -25.09  1878    1
     ## 
-    ##          stats
-    ## parameter        mean        sd        2.5%         25%         50%        75%
-    ##     rho     1.0013761 0.5622301   0.4638301   0.7009627   0.8928473   1.119697
-    ##     alpha   0.8439101 0.4640016   0.1709341   0.5146897   0.7702187   1.080266
-    ##     sigma   1.0131917 0.1433693   0.7660517   0.9105530   0.9976209   1.100153
-    ##     lp__  -24.1482733 1.4111336 -27.8256808 -24.7550720 -23.8268254 -23.100892
-    ##          stats
-    ## parameter      97.5%
-    ##     rho     2.256536
-    ##     alpha   1.955260
-    ##     sigma   1.329995
-    ##     lp__  -22.597962
-    ## 
-    ## , , chains = chain:2
-    ## 
-    ##          stats
-    ## parameter        mean        sd        2.5%         25%         50%        75%
-    ##     rho     1.0347434 0.5547786   0.4516889   0.7058368   0.9120277   1.190092
-    ##     alpha   0.8786836 0.4862396   0.1755961   0.5129088   0.7937086   1.180718
-    ##     sigma   0.9974582 0.1400358   0.7635876   0.8972647   0.9792522   1.088515
-    ##     lp__  -24.2290096 1.4825348 -28.1779248 -24.7870935 -23.8265732 -23.201919
-    ##          stats
-    ## parameter      97.5%
-    ##     rho     2.621303
-    ##     alpha   1.928084
-    ##     sigma   1.314021
-    ##     lp__  -22.604296
-    ## 
-    ## , , chains = chain:3
-    ## 
-    ##          stats
-    ## parameter        mean        sd        2.5%         25%         50%        75%
-    ##     rho     0.9878268 0.4715831   0.4343861   0.6847566   0.8943774   1.136556
-    ##     alpha   0.8846707 0.4816487   0.2068558   0.5200168   0.8071560   1.161046
-    ##     sigma   0.9926270 0.1453174   0.7367658   0.8926148   0.9804877   1.085530
-    ##     lp__  -24.1702244 1.3227180 -27.5702853 -24.7253611 -23.8770379 -23.158790
-    ##          stats
-    ## parameter      97.5%
-    ##     rho     2.154094
-    ##     alpha   1.990197
-    ##     sigma   1.306290
-    ##     lp__  -22.597914
-    ## 
-    ## , , chains = chain:4
-    ## 
-    ##          stats
-    ## parameter        mean        sd        2.5%         25%         50%        75%
-    ##     rho     0.9767550 0.4901354   0.4450087   0.6858285   0.8700203   1.122831
-    ##     alpha   0.9236404 0.4642808   0.2349295   0.5895466   0.8632935   1.183301
-    ##     sigma   0.9956259 0.1414423   0.7432814   0.8993670   0.9828272   1.080510
-    ##     lp__  -24.0509511 1.2362345 -26.9487315 -24.7104107 -23.7747575 -23.095447
-    ##          stats
-    ## parameter      97.5%
-    ##     rho     2.243512
-    ##     alpha   2.021161
-    ##     sigma   1.298929
-    ##     lp__  -22.576765
+    ## Samples were drawn using NUTS(diag_e) at Fri Mar 19 18:14:47 2021.
+    ## For each parameter, n_eff is a crude measure of effective sample size,
+    ## and Rhat is the potential scale reduction factor on split chains (at 
+    ## convergence, Rhat=1).
 
 ``` r
 param_posteriors <- extract(fit_params, inc_warmup = TRUE, permuted = FALSE)
@@ -522,7 +464,17 @@ mcmc_areas(fit_params, regex_pars = c("rho", "alpha", "sigma"),  prob = 0.8) +
 
 ![](Gaussian_processes_stan_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
+#### Posterior distribution:
+
 ``` r
+posterior_summary <-
+  as.tibble(extract(fit_params)) %>%
+  select(-lp__) %>%
+  pivot_longer(cols = c("rho", "alpha", "sigma"), 
+               names_to = "param", values_to = "mcmc_estimate") %>%
+  group_by(param) %>%
+  summarise(mean_p = mean(mcmc_estimate), sd_p = sd(mcmc_estimate))
+
 fit_params
 ```
 
@@ -531,28 +483,238 @@ fit_params
     ## post-warmup draws per chain=1000, total post-warmup draws=4000.
     ## 
     ##         mean se_mean   sd   2.5%    25%    50%    75%  97.5% n_eff Rhat
-    ## rho     1.00    0.01 0.52   0.44   0.69   0.89   1.14   2.30  2058    1
-    ## alpha   0.88    0.01 0.47   0.19   0.53   0.81   1.15   1.98  2834    1
-    ## sigma   1.00    0.00 0.14   0.75   0.90   0.98   1.09   1.32  2540    1
-    ## lp__  -24.15    0.04 1.37 -27.68 -24.74 -23.83 -23.14 -22.59  1454    1
+    ## rho     1.35    0.02 0.71   0.56   0.90   1.17   1.57   3.18  1923    1
+    ## alpha   0.93    0.01 0.42   0.34   0.62   0.85   1.17   1.97  3885    1
+    ## sigma   1.09    0.00 0.15   0.85   0.98   1.07   1.18   1.43  2613    1
+    ## lp__  -26.46    0.03 1.23 -29.63 -26.99 -26.12 -25.58 -25.09  1878    1
     ## 
-    ## Samples were drawn using NUTS(diag_e) at Thu Mar 18 15:31:06 2021.
+    ## Samples were drawn using NUTS(diag_e) at Fri Mar 19 18:14:47 2021.
     ## For each parameter, n_eff is a crude measure of effective sample size,
     ## and Rhat is the potential scale reduction factor on split chains (at 
     ## convergence, Rhat=1).
 
-``` r
-as.tibble(extract(fit_params)) %>%
-  select(-lp__) %>%
-  pivot_longer(cols = c("rho", "alpha", "sigma"), 
-               names_to = "param", values_to = "mcmc_estimate") %>%
-  group_by(param) %>%
-  summarise(mean_p = mean(mcmc_estimate), sd_p = sd(mcmc_estimate))
+## Predictive model:
+
+-   add generated quantities at the end.
+
+-   most of the post pred density is computed using functions.
+
+``` stan
+functions {
+
+  matrix KxX_IKXX(int N1, int N2, real[] x1, real[] x2, real alpha, real rho){
+  
+    matrix[N2, N2] Kx2x2 = cov_exp_quad(x2, alpha, rho);
+    
+    matrix[N1, N2] Kx1x2;
+    
+    for(r in 1:N1){
+      for(c in 1:N2){
+        Kx1x2[r, c] = 
+          square(alpha) * exp(- square(x1[r] - x2[c]) / (2 * square(rho)));
+      }
+    }
+    return Kx1x2 * inverse(Kx2x2);
+  }
+}
+
+data {
+  int<lower=1> N;
+  real x[N];
+  vector[N] y;
+  // pred:
+  int<lower=1> N_new;
+  real x_new[N_new];
+}
+
+transformed data {
+  vector[N] mu = rep_vector(0, N);
+}
+
+parameters {
+  real<lower=0> rho;
+  real<lower=0> alpha;
+  real<lower=0> sigma;
+}
+
+model {
+  matrix[N, N] L_K;
+  matrix[N, N] K = cov_exp_quad(x, alpha, rho);
+  real sq_sigma = square(sigma);
+
+  // diagonal elements
+  for (n in 1:N)
+    K[n, n] = K[n, n] + sq_sigma;
+
+  L_K = cholesky_decompose(K);
+
+  rho ~ inv_gamma(5, 5);
+  alpha ~ std_normal();
+  sigma ~ std_normal();
+
+  y ~ multi_normal_cholesky(mu, L_K);
+}
+
+generated quantities {
+
+  vector[N_new] y_new;
+  y_new = KxX_IKXX(N_new, N, x_new, x, alpha, rho) * y;
+  
+}
 ```
 
-    ## # A tibble: 3 x 3
-    ##   param mean_p  sd_p
-    ## * <chr>  <dbl> <dbl>
-    ## 1 alpha  0.883 0.475
-    ## 2 rho    1.00  0.521
-    ## 3 sigma  1.00  0.143
+``` r
+N <- 10
+x <- seq(0, 2, length.out = N)
+y <- sin(x) + runif(N, 0, 0.1)
+
+N_new <- 2
+x_new <- c(0.23, 1.23)
+
+gp_pred_data <- list(N = N, x = x, y = y, 
+                     N_new = N_new, x_new = x_new)
+gp_pred_data
+```
+
+    ## $N
+    ## [1] 10
+    ## 
+    ## $x
+    ##  [1] 0.0000000 0.2222222 0.4444444 0.6666667 0.8888889 1.1111111 1.3333333
+    ##  [8] 1.5555556 1.7777778 2.0000000
+    ## 
+    ## $y
+    ##  [1] 0.06446142 0.25250291 0.44230541 0.71410725 0.82115761 0.97907509
+    ##  [7] 0.99158132 1.04508025 1.00203210 0.97678717
+    ## 
+    ## $N_new
+    ## [1] 2
+    ## 
+    ## $x_new
+    ## [1] 0.23 1.23
+
+``` r
+fit_pred <- sampling(gp_pred, data = gp_pred_data)
+```
+
+    ## 
+    ## SAMPLING FOR MODEL 'ddfde822bb8387a26d5cc001888059d9' NOW (CHAIN 1).
+    ## Chain 1: 
+    ## Chain 1: Gradient evaluation took 2e-05 seconds
+    ## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.2 seconds.
+    ## Chain 1: Adjust your expectations accordingly!
+    ## Chain 1: 
+    ## Chain 1: 
+    ## Chain 1: Iteration:    1 / 2000 [  0%]  (Warmup)
+    ## Chain 1: Iteration:  200 / 2000 [ 10%]  (Warmup)
+    ## Chain 1: Iteration:  400 / 2000 [ 20%]  (Warmup)
+    ## Chain 1: Iteration:  600 / 2000 [ 30%]  (Warmup)
+    ## Chain 1: Iteration:  800 / 2000 [ 40%]  (Warmup)
+    ## Chain 1: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+    ## Chain 1: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+    ## Chain 1: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+    ## Chain 1: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+    ## Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+    ## Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+    ## Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
+    ## Chain 1: 
+    ## Chain 1:  Elapsed Time: 0.060292 seconds (Warm-up)
+    ## Chain 1:                0.056944 seconds (Sampling)
+    ## Chain 1:                0.117236 seconds (Total)
+    ## Chain 1: 
+    ## 
+    ## SAMPLING FOR MODEL 'ddfde822bb8387a26d5cc001888059d9' NOW (CHAIN 2).
+    ## Chain 2: 
+    ## Chain 2: Gradient evaluation took 1.6e-05 seconds
+    ## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.16 seconds.
+    ## Chain 2: Adjust your expectations accordingly!
+    ## Chain 2: 
+    ## Chain 2: 
+    ## Chain 2: Iteration:    1 / 2000 [  0%]  (Warmup)
+    ## Chain 2: Iteration:  200 / 2000 [ 10%]  (Warmup)
+    ## Chain 2: Iteration:  400 / 2000 [ 20%]  (Warmup)
+    ## Chain 2: Iteration:  600 / 2000 [ 30%]  (Warmup)
+    ## Chain 2: Iteration:  800 / 2000 [ 40%]  (Warmup)
+    ## Chain 2: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+    ## Chain 2: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+    ## Chain 2: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+    ## Chain 2: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+    ## Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+    ## Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+    ## Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
+    ## Chain 2: 
+    ## Chain 2:  Elapsed Time: 0.062217 seconds (Warm-up)
+    ## Chain 2:                0.061466 seconds (Sampling)
+    ## Chain 2:                0.123683 seconds (Total)
+    ## Chain 2: 
+    ## 
+    ## SAMPLING FOR MODEL 'ddfde822bb8387a26d5cc001888059d9' NOW (CHAIN 3).
+    ## Chain 3: 
+    ## Chain 3: Gradient evaluation took 1.4e-05 seconds
+    ## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.14 seconds.
+    ## Chain 3: Adjust your expectations accordingly!
+    ## Chain 3: 
+    ## Chain 3: 
+    ## Chain 3: Iteration:    1 / 2000 [  0%]  (Warmup)
+    ## Chain 3: Iteration:  200 / 2000 [ 10%]  (Warmup)
+    ## Chain 3: Iteration:  400 / 2000 [ 20%]  (Warmup)
+    ## Chain 3: Iteration:  600 / 2000 [ 30%]  (Warmup)
+    ## Chain 3: Iteration:  800 / 2000 [ 40%]  (Warmup)
+    ## Chain 3: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+    ## Chain 3: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+    ## Chain 3: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+    ## Chain 3: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+    ## Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+    ## Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+    ## Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
+    ## Chain 3: 
+    ## Chain 3:  Elapsed Time: 0.064404 seconds (Warm-up)
+    ## Chain 3:                0.072392 seconds (Sampling)
+    ## Chain 3:                0.136796 seconds (Total)
+    ## Chain 3: 
+    ## 
+    ## SAMPLING FOR MODEL 'ddfde822bb8387a26d5cc001888059d9' NOW (CHAIN 4).
+    ## Chain 4: 
+    ## Chain 4: Gradient evaluation took 1.8e-05 seconds
+    ## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.18 seconds.
+    ## Chain 4: Adjust your expectations accordingly!
+    ## Chain 4: 
+    ## Chain 4: 
+    ## Chain 4: Iteration:    1 / 2000 [  0%]  (Warmup)
+    ## Chain 4: Iteration:  200 / 2000 [ 10%]  (Warmup)
+    ## Chain 4: Iteration:  400 / 2000 [ 20%]  (Warmup)
+    ## Chain 4: Iteration:  600 / 2000 [ 30%]  (Warmup)
+    ## Chain 4: Iteration:  800 / 2000 [ 40%]  (Warmup)
+    ## Chain 4: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+    ## Chain 4: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+    ## Chain 4: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+    ## Chain 4: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+    ## Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+    ## Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+    ## Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
+    ## Chain 4: 
+    ## Chain 4:  Elapsed Time: 0.061294 seconds (Warm-up)
+    ## Chain 4:                0.05944 seconds (Sampling)
+    ## Chain 4:                0.120734 seconds (Total)
+    ## Chain 4:
+
+``` r
+fit_pred
+```
+
+    ## Inference for Stan model: ddfde822bb8387a26d5cc001888059d9.
+    ## 4 chains, each with iter=2000; warmup=1000; thin=1; 
+    ## post-warmup draws per chain=1000, total post-warmup draws=4000.
+    ## 
+    ##          mean se_mean   sd  2.5%  25%  50%  75% 97.5% n_eff Rhat
+    ## rho      1.32    0.01 0.36  0.76 1.06 1.28 1.53  2.13  2312    1
+    ## alpha    0.86    0.01 0.37  0.39 0.60 0.78 1.03  1.81  2206    1
+    ## sigma    0.04    0.00 0.02  0.02 0.03 0.03 0.04  0.08  1684    1
+    ## y_new[1] 0.13    0.16 9.86 -0.10 0.24 0.25 0.25  0.51  4004    1
+    ## y_new[2] 1.10    0.09 5.97  0.67 1.00 1.01 1.01  1.33  3965    1
+    ## lp__     8.71    0.03 1.25  5.51 8.16 9.04 9.63 10.12  1498    1
+    ## 
+    ## Samples were drawn using NUTS(diag_e) at Fri Mar 19 18:15:22 2021.
+    ## For each parameter, n_eff is a crude measure of effective sample size,
+    ## and Rhat is the potential scale reduction factor on split chains (at 
+    ## convergence, Rhat=1).

@@ -278,6 +278,5 @@ fit_pred <- sampling(gp_pred, data = gp_pred_data)
 
 fit_pred
 
-
 ```
 
