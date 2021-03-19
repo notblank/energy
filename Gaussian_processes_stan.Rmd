@@ -187,21 +187,37 @@ fit_params
 
 ## Predictive model:
 
-```{r, output.var = rho_m}
+- add generated quantities at the end.
 
-rho_m <- summary(fit_params)$summary[1,1]
-alpha_m <- summary(fit_params)$summary[2,1]
-sigma_m <- summary(fit_params)$summary[3,1]
-
-sigma_m
-
-```
+- most of the post pred density is computed using functions.
 
 ```{stan, output.var="gp_pred"}
+
+functions {
+
+  matrix KxX_IKXX(int N1, int N2, real[] x1, real[] x2, real alpha, real rho){
+  
+    matrix[N2, N2] Kx2x2 = cov_exp_quad(x2, alpha, rho);
+    
+    matrix[N1, N2] Kx1x2;
+    
+    for(r in 1:N1){
+      for(c in 1:N2){
+        Kx1x2[r, c] = 
+          square(alpha) * exp(- square(x1[r] - x2[c]) / (2 * square(rho)));
+      }
+    }
+    return Kx1x2 * inverse(Kx2x2);
+  }
+}
 
 data {
   int<lower=1> N;
   real x[N];
+  vector[N] y;
+  // pred:
+  int<lower=1> N_new;
+  real x_new[N_new];
 }
 
 transformed data {
@@ -209,13 +225,15 @@ transformed data {
 }
 
 parameters {
-  vector[N] y;
+  real<lower=0> rho;
+  real<lower=0> alpha;
+  real<lower=0> sigma;
 }
 
 model {
   matrix[N, N] L_K;
-  matrix[N, N] K = cov_exp_quad(x, 0.82, 1.36);
-  real sq_sigma = square(0.86);
+  matrix[N, N] K = cov_exp_quad(x, alpha, rho);
+  real sq_sigma = square(sigma);
 
   // diagonal elements
   for (n in 1:N)
@@ -223,21 +241,43 @@ model {
 
   L_K = cholesky_decompose(K);
 
+  rho ~ inv_gamma(5, 5);
+  alpha ~ std_normal();
+  sigma ~ std_normal();
+
   y ~ multi_normal_cholesky(mu, L_K);
+}
+
+generated quantities {
+
+  vector[N_new] y_new;
+  y_new = KxX_IKXX(N_new, N, x_new, x, alpha, rho) * y;
+  
 }
 
 ```
 
 ```{r}
 
-N <- 100
+N <- 10
 x <- seq(0, 2, length.out = N)
+y <- sin(x) + runif(N, 0, 0.1)
 
-gp_pred_data <- list(N = N, x = x)
+N_new <- 2
+x_new <- c(0.23, 1.23)
+
+gp_pred_data <- list(N = N, x = x, y = y, 
+                     N_new = N_new, x_new = x_new)
 gp_pred_data
 
 fit_pred <- sampling(gp_pred, data = gp_pred_data)
 
 ```
 
+```{r}
+
+fit_pred
+
+
+```
 
