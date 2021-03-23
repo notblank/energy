@@ -1,0 +1,106 @@
+---
+title: "Sum of GPs"
+author: "FZ"
+date: "3/23/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Sum of GPs:
+
+```{r}
+library(tidyverse)
+library(rstan)
+library(bayesplot)
+```
+
+
+```{stan, output.var="gp_pred"}
+
+functions {
+  
+  real exp_kern(real x1, real x2, real alpha, real rho){
+    return square(alpha) * exp(-fabs(x1 - x2) / square(rho));
+  }
+
+  real periodic_kern(real x1, real x2, real alpha, real rho, real p){
+    real nom = square(sin(pi()*(x1 - x2)/p));
+    return square(alpha) * exp(-nom / square(rho));
+  }
+  
+}
+
+data {
+  int<lower=1> N;
+  real x[N];
+  vector[N] y;
+}
+
+transformed data {
+  vector[N] mu = rep_vector(0, N);
+}
+
+parameters {
+  real<lower=0> rho;
+  real<lower=0> alpha;
+  real<lower=0> p;
+  real<lower=0> sigma;
+}
+
+model {
+  matrix[N, N] L_K;
+  matrix[N, N] K;
+  real sq_sigma = square(sigma);
+
+  for (r in 1:N){
+    for(c in 1:N){
+      K[r, c] = periodic_kern(x[r], x[c], alpha, rho, p);
+    }
+  }
+  
+  // diagonal elements
+  for (n in 1:N)
+    K[n, n] = K[n, n] + sq_sigma;
+
+  L_K = cholesky_decompose(K);
+
+  rho ~ inv_gamma(5, 5);
+  alpha ~ std_normal();
+  p ~ uniform(0, 5);
+  sigma ~ std_normal();
+
+  y ~ multi_normal_cholesky(mu, L_K);
+}
+
+```
+
+## Periodic Kernel 
+
+
+```{r}
+
+N <- 20
+x <- seq(0, 10, length.out = N)
+y <- sin(x) + runif(N, 0, 0.1)
+
+gp_pred_data <- list(N = N, x = x, y = y)
+gp_pred_data
+
+fit_pred <- sampling(gp_pred, data = gp_pred_data, 
+                     iter = 5000, control = list(max_treedepth = 20))
+
+```
+  
+  
+```{r}
+
+tibble(N, x, y) %>%
+  ggplot(aes(x, y)) +
+  geom_point()
+
+fit_pred
+
+```
