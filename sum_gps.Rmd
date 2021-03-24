@@ -1,26 +1,44 @@
 ---
-title: "Sum of GPs"
+title: "sum of gps"
 author: "FZ"
-date: "3/23/2021"
-output: html_document
+date: "3/24/2021"
+output: rmarkdown::github_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Sum of GPs:
+## Sum of GPs
 
 ```{r}
+
 library(tidyverse)
 library(rstan)
 library(bayesplot)
+library(lubridate)
+
+rstan_options(auto_write = TRUE)
+
 ```
 
+## Sum of GPs
 
-```{stan, output.var="gp_pred"}
+
+```{stan, output.var="gp_sum"}
 
 functions {
+  
+  int is_weekday(int d) {
+    if(d == 6 || d == 7)
+      return 0;
+    else
+      return 1;
+  }
+  
+  real exp_quad_kern(real x1, real x2, real alpha, real rho){
+    return square(alpha) * exp(-square(x1 - x2) / square(rho));
+  }
   
   real exp_kern(real x1, real x2, real alpha, real rho){
     return square(alpha) * exp(-fabs(x1 - x2) / square(rho));
@@ -44,9 +62,19 @@ transformed data {
 }
 
 parameters {
-  real<lower=0> rho;
-  real<lower=0> alpha;
-  real<lower=0> p;
+  // long-term trends:
+  real<lower=0> rho_lt;
+  real<lower=0> alpha_lt;
+  // short-term trends:
+  real<lower=0> rho_st;
+  real<lower=0> alpha_st;
+  // weekly-quasi-periodic patterns:
+  real<lower=0> rho_wqp1;
+  real<lower=0> rho_wqp2;
+  real<lower=0> alpha_wqp;
+  // yearly seasonal pattern: 
+  //real<lower=0> rho_ys1;real<lower=0> rho_ys2;real<lower=0> alpha_ys;
+  
   real<lower=0> sigma;
 }
 
@@ -57,7 +85,10 @@ model {
 
   for (r in 1:N){
     for(c in 1:N){
-      K[r, c] = periodic_kern(x[r], x[c], alpha, rho, p);
+      K[r, c] = exp_quad_kern(x[r], x[c], alpha_lt, rho_lt) +
+                exp_quad_kern(x[r], x[c], alpha_st, rho_st) +
+      exp_quad_kern(x[r], x[c], 1, rho_wqp1) *
+      periodic_kern(x[r], x[c], alpha_wqp, rho_wqp2, 7);
     }
   }
   
@@ -67,39 +98,81 @@ model {
 
   L_K = cholesky_decompose(K);
 
-  rho ~ inv_gamma(5, 5);
-  alpha ~ std_normal();
-  p ~ uniform(0, 5);
+  rho_lt ~ inv_gamma(5, 5);
+  alpha_lt ~ std_normal();
+  rho_st ~ inv_gamma(5, 5);
+  alpha_st ~ std_normal();
   sigma ~ std_normal();
 
+  rho_wqp1 ~ inv_gamma(5, 5);
+  rho_wqp2 ~ inv_gamma(5, 5);
+  alpha_wqp ~ std_normal();
+  
   y ~ multi_normal_cholesky(mu, L_K);
 }
 
 ```
 
-## Periodic Kernel 
-
+## Data:
 
 ```{r}
 
-N <- 20
-x <- seq(0, 10, length.out = N)
-y <- sin(x) + runif(N, 0, 0.1)
-
-gp_pred_data <- list(N = N, x = x, y = y)
-gp_pred_data
-
-fit_pred <- sampling(gp_pred, data = gp_pred_data, 
-                     iter = 5000, control = list(max_treedepth = 20))
+births <- read_csv("./births.csv") %>%
+  na.omit() %>%
+  filter(day != 99) %>%
+  unite(date, year, month, day, sep = "-") %>%
+  mutate(date = ymd(date), y_day = yday(date), 
+         gender = case_when(gender == "F" ~ "female", TRUE ~ "male")) %>%
+  na.omit() %>%
+  pivot_wider(names_from = gender, values_from = births) %>%
+  mutate(births = female + male) %>%
+  na.omit()
 
 ```
-  
-  
+
+
 ```{r}
 
-tibble(N, x, y) %>%
-  ggplot(aes(x, y)) +
-  geom_point()
+births %>%
+  ggplot(aes(date, births)) +
+  geom_point() +
+  geom_smooth() +
+  labs(x = "Day of the year", y = "Number of births")
+
+births %>%
+  group_by(y_day) %>%
+  summarise(births = mean(births)) %>%
+  ggplot(aes(y_day, births)) +
+  geom_line() +
+  geom_smooth() +
+  labs(x = "Day of the year", y = "Number of births")
+
+```
+
+
+```{r}
+
+births_1969 <- births %>% 
+  filter(year(date) == 1969) %>%
+  mutate(y_day = yday(date))
+
+births_1969 %>% filter(is.na(births))
+
+N <- dim(births_1969)[1]
+
+births_data <- list(N=N, x=births_1969$y_day, y=births_1969$births)
+
+births_data
+
+```
+```{r}
+
+fit_pred <- sampling(gp_sum, data = births_data, 
+                     iter = 2000, control = list(max_treedepth = 10))
+
+```
+
+```{r}
 
 fit_pred
 
