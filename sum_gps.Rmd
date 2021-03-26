@@ -18,6 +18,7 @@ library(rstan)
 library(bayesplot)
 library(lubridate)
 
+options(mc.cores = parallel::detectCores())
 rstan_options(auto_write = TRUE)
 
 ```
@@ -72,8 +73,10 @@ parameters {
   real<lower=0> rho_wqp1;
   real<lower=0> rho_wqp2;
   real<lower=0> alpha_wqp;
-  // yearly seasonal pattern: 
-  //real<lower=0> rho_ys1;real<lower=0> rho_ys2;real<lower=0> alpha_ys;
+  // yearly-quasi-periodic patterns:
+  real<lower=0> rho_yqp1;
+  real<lower=0> rho_yqp2;
+  real<lower=0> alpha_yqp;
   
   real<lower=0> sigma;
 }
@@ -88,7 +91,9 @@ model {
       K[r, c] = exp_quad_kern(x[r], x[c], alpha_lt, rho_lt) +
                 exp_quad_kern(x[r], x[c], alpha_st, rho_st) +
       exp_quad_kern(x[r], x[c], 1, rho_wqp1) *
-      periodic_kern(x[r], x[c], alpha_wqp, rho_wqp2, 7);
+      periodic_kern(x[r], x[c], alpha_wqp, rho_wqp2, 7) +
+      exp_quad_kern(x[r], x[c], 1, rho_yqp1) *
+      periodic_kern(x[r], x[c], alpha_yqp, rho_yqp2, 7);
     }
   }
   
@@ -103,10 +108,14 @@ model {
   rho_st ~ inv_gamma(5, 5);
   alpha_st ~ std_normal();
   sigma ~ std_normal();
-
+  // weekly-qp
   rho_wqp1 ~ inv_gamma(5, 5);
   rho_wqp2 ~ inv_gamma(5, 5);
   alpha_wqp ~ std_normal();
+  // yearly-qp 
+  rho_yqp1 ~ inv_gamma(5, 5);
+  rho_yqp2 ~ inv_gamma(5, 5);
+  alpha_yqp ~ std_normal();
   
   y ~ multi_normal_cholesky(mu, L_K);
 }
@@ -128,6 +137,9 @@ births <- read_csv("./births.csv") %>%
   mutate(births = female + male) %>%
   na.omit()
 
+births %>%
+  dim()
+
 ```
 
 
@@ -137,15 +149,7 @@ births %>%
   ggplot(aes(date, births)) +
   geom_point() +
   geom_smooth() +
-  labs(x = "Day of the year", y = "Number of births")
-
-births %>%
-  group_by(y_day) %>%
-  summarise(births = mean(births)) %>%
-  ggplot(aes(y_day, births)) +
-  geom_line() +
-  geom_smooth() +
-  labs(x = "Day of the year", y = "Number of births")
+  labs(x = "Day of the year", y = "Number of births") 
 
 ```
 
@@ -167,8 +171,8 @@ births_data
 ```
 ```{r}
 
-fit_pred <- sampling(gp_sum, data = births_data, 
-                     iter = 2000, control = list(max_treedepth = 10))
+fit_pred <- sampling(gp_sum, data = births_data) 
+#                     iter = 2000, control = list(max_treedepth = 10))
 
 ```
 
@@ -177,3 +181,4 @@ fit_pred <- sampling(gp_sum, data = births_data,
 fit_pred
 
 ```
+

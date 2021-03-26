@@ -9,7 +9,7 @@ output: rmarkdown::github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Sum of GPs:
+## Estimating the period:
 
 ```{r}
 library(tidyverse)
@@ -100,20 +100,43 @@ x <- seq(0, 10, length.out = N)
 y <- sin(x) + runif(N, 0, 0.5)
 
 gp_pred_data <- list(N = N, x = x, y = y)
-gp_pred_data
-
-fit_pred <- sampling(gp_pred, data = gp_pred_data, 
-                     iter = 5000, control = list(max_treedepth = 20))
-
-```
-  
-  
-```{r}
 
 tibble(N, x, y) %>%
   ggplot(aes(x, y)) +
   geom_point()
 
+```
+
+
+```{r}
+
+fit_pred <- sampling(gp_pred, data = gp_pred_data, 
+                     iter = 2000, 
+                     control = list(max_treedepth = 10))
+```
+
+### Divergent transitions:
+
+```{r}
+
+pairs(fit_pred, pars = c("rho", "alpha", "p"), las = 1)
+
+```
+  
+```{r}
+
 fit_pred
+
+```
+
+```{r}
+
+mcmc_areas(
+  fit_pred, 
+  pars = c("rho", "alpha", "p"), 
+  prob = 0.8, # 80% intervals
+  prob_outer = 0.99, # 99%
+  point_est = "mean"
+)
 
 ```

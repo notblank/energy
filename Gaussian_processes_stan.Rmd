@@ -15,9 +15,12 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(rstan)
 library(bayesplot)
+
+options(mc.cores = parallel::detectCores())
+
 ```
 
-## GP over 5 points:
+## GP over N points:
 
 ```{stan, output.var="gp1"}
 
@@ -32,7 +35,7 @@ transformed data {
   for (i in 1:(N - 1)) {
     K[i, i] = 1 + 0.1;
     for (j in (i + 1):N) {
-      K[i, j] = exp(-0.5 * square(x[i] - x[j]));
+      K[i, j] = exp(-0.5 * square(x[i] - x[j])/10);
       K[j, i] = K[i, j];
     }
   }
@@ -52,32 +55,43 @@ model {
 
 
 ```{r}
-
-gp_data <- list(N = 10, x = seq(1, 10))
+N <- 5
+gp_data <- list(N = N, x = seq(0, 2, length.out = N))
 gp_data
 
-fit = sampling(object = gp1, data = gp_data)
+fit <- sampling(object = gp1, data = gp_data, 
+                iter = 10000, control = list(max_treedepth = 20))
 
 ```
+
+```{r}
+
+fit
+
+```
+
 
 ### Posterior Samples from a GP:
 
 ```{r}
 
-posterior <- extract(fit, inc_warmup = FALSE)
+y_x <- extract(fit, inc_warmup = TRUE, permuted = FALSE)
 
-n_samples <- dim(posterior$y)[1]
 
-as.tibble(posterior$y) %>%
-  mutate(sample_n = 1:n_samples) %>%
-  pivot_longer(cols = -sample_n, names_to = "vars", values_to = "mcmc_samples") %>%
-  filter(sample_n <= 10) %>%
-  mutate(x = rep(1:10, 10), sample_n = factor(sample_n)) %>%
-  ggplot(aes(x, mcmc_samples, color = sample_n)) +
-  geom_line() +
-  labs(title = "10 samples from a GP") +
-  theme(legend.position = "none")
+color_scheme_set("mix-blue-pink")
+p <- 
+  mcmc_trace(y_x,  
+             n_warmup = 5000,
+             facet_args = list(nrow = 2, labeller = label_parsed))
 
+p + facet_text(size = 15)
+
+mcmc_areas(
+  y_x, 
+  prob = 0.8, # 80% intervals
+  prob_outer = 0.99, # 99%
+  point_est = "mean"
+)
 
 ```
 
