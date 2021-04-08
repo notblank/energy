@@ -131,7 +131,7 @@ births <- read_csv("./births.csv") %>%
   filter(day != 99) %>%
   unite(date, year, month, day, sep = "-") %>%
   mutate(date = ymd(date), y_day = yday(date), 
-         gender = case_when(gender == "F" ~ "female", TRUE ~ "male")) %>%
+         gender = case_when(gender == "F" ~ "female", TRUE ~ "male"))%>%
   na.omit() %>%
   pivot_wider(names_from = gender, values_from = births) %>%
   mutate(births = female + male) %>%
@@ -156,15 +156,19 @@ births %>%
 
 ```{r}
 
-births_1969 <- births %>% 
-  filter(year(date) == 1969) %>%
+births %>% 
+  mutate(birth_y = year(date)) %>% 
+  distinct(birth_y)
+
+births_1972 <- births %>% 
+  filter(year(date) <= 1972) %>%
   mutate(y_day = yday(date))
 
-births_1969 %>% filter(is.na(births))
+births_1972 %>% filter(is.na(births))
 
-N <- dim(births_1969)[1]
+N <- dim(births_1972)[1]
 
-births_data <- list(N=N, x=births_1969$y_day, y=births_1969$births)
+births_data <- list(N=N, x=births_1972$y_day, y=births_1972$births)
 
 births_data
 
@@ -179,6 +183,10 @@ fit_pred <- sampling(gp_sum, data = births_data)
 ```{r}
 
 fit_pred
+
+```
+```{r}
+
 
 ```
 
