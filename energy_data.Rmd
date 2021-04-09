@@ -1,0 +1,188 @@
+---
+title: "energy_data"
+author: "FZ"
+date: "4/9/2021"
+output: rmarkdown::github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Libraries
+
+```{r}
+
+library(tidyverse)
+library(lubridate)
+
+```
+
+## Data
+
+Data is collected very irregularly over time. Only useful at day-scale.
+Some houses have less data than others (|house1| > |house4|).
+
+```{r}
+
+house <- read_csv("data/house1.csv") %>%
+  rename(date = "X1") %>%
+  mutate(date = ymd_hms(date), 
+         h = hour(date), m = minute(date), s = second(date)) %>%
+  unite("time", c("h", "m", "s"), sep = ":")
+
+house %>% names()
+
+house %>% head()
+
+```
+
+## Data contains:
+
+- 12 days of data in month 4 and 11 in month 5 in 2011. 
+- Data is collected every second all day long.
+
+```{r}
+
+house %>%
+  distinct(year(date), month = month(date), day = day(date)) %>%
+  mutate(n = 1) %>%
+  group_by(month) %>%
+  summarise(sum(n))
+
+
+house %>%
+  distinct(second = second(date)) %>%
+  arrange(second)
+
+house %>%
+  distinct(hour = hour(date)) %>%
+  arrange(hour)
+
+house %>%
+  dim()
+
+```
+
+- 23 consecutive days since April to May 27.
+
+```{r}
+
+house %>%
+  distinct(d = day(date), m = month(date)) %>%
+  arrange(m, d)
+
+```
+
+## All appliances:
+
+```{r}
+
+house %>%
+  pivot_longer(cols = -c(date, time), 
+               names_to = "appliance", values_to = "consumption") %>%
+  ggplot(aes(date, consumption, color = appliance)) +
+  geom_line() +
+  facet_wrap(~appliance, scales = "free_y") +
+  theme(legend.position = "none", 
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  
+```
+
+- Daily consumption changes over time: no consumption around may 16.
+
+```{r}
+
+house %>%
+  filter(day(date) == 20) %>%
+  pivot_longer(cols = -c(date, time), 
+               names_to = "appliance", values_to = "consumption") %>%
+  ggplot(aes(date, consumption)) +
+  geom_line() +
+  facet_wrap(~appliance, scales = "free_y") +
+  theme(legend.position = "none", 
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(title = "A Day of consumption")
+
+```
+
+```{r}
+
+mean_hour_c <-
+  house %>%
+    pivot_longer(cols = -c(date, time), 
+                 names_to = "appliance", values_to = "consumption") %>%
+    mutate(h = hour(date)) %>%
+    group_by(appliance, h) %>%
+    summarise(m_consumption = mean(consumption), 
+              sd_consumption = sd(consumption)) 
+
+```
+
+### High variance but same pattern:
+
+```{r}
+
+mean_hour_c %>%
+  ggplot() +
+  geom_line(aes(h, m_consumption)) +
+  facet_wrap(~appliance, scales = "free_y") +
+  theme(legend.position = "none")
+
+mean_hour_c %>%
+  ggplot() +
+  geom_line(aes(h, m_consumption)) +
+  geom_line(aes(h, m_consumption + sd_consumption), color = "red") +
+  facet_wrap(~appliance, scales = "free_y") +
+  theme(legend.position = "none")
+
+```
+### What do different households have in common?
+
+
+```{r}
+
+house_files = list.files(path = "./data/", pattern = ".csv")
+n_houses <- length(house_files)
+house_dfs <- lapply(paste("./data/", house_files, sep = ""), read_csv)
+
+
+process_data <- function(df, house_number) {
+  
+    df <-
+      df %>%
+      rename(date = "X1") %>%
+      mutate(house = house_number, 
+             date = ymd_hms(date), 
+             h = hour(date), m = minute(date), s = second(date)) %>%
+      unite("time", c("h", "m", "s"), sep = ":") %>%
+      pivot_longer(cols = -c(date, time, house), 
+                   names_to = "appliance", values_to = "consumption") %>%
+      mutate(h = hour(date)) %>%
+      group_by(house, appliance, h) %>%
+      summarise(m_consumption = mean(consumption), 
+                sd_consumption = sd(consumption)) 
+    
+    return(df)
+}
+
+house1_msd <- process_data(house_dfs[[1]], 1)
+house2_msd <- process_data(house_dfs[[2]], 2)
+house3_msd <- process_data(house_dfs[[3]], 3)
+house4_msd <- process_data(house_dfs[[4]], 4)
+house5_msd <- process_data(house_dfs[[5]], 5)
+house6_msd <- process_data(house_dfs[[6]], 6)
+
+houses <- bind_rows(house1_msd, house2_msd, house3_msd,
+                    house4_msd, house5_msd, house6_msd)
+
+houses %>% 
+  distinct(appliance) %>%
+  .$appliance
+
+```
+```{r}
+
+
+
+```
